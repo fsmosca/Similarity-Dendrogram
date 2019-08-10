@@ -6,3 +6,8 @@ Plot dendrogram on chess engines similarity. The script will read matrix.txt a s
 * matplotlib  
 * numpy  
 
+### How to run
+* Place similaritydendrogram.py and matrix.txt in same folder
+* Execute similaritydendrogram.py  
+The output will be similarity_dendrogram.png
+
