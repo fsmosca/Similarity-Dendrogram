@@ -3,7 +3,7 @@ Plot dendrogram on chess engines similarity. The script will read matrix.txt a s
 
 Test epd: midgame.epd  
 Movetime: 100 millisec or 0.1 sec
-![](https://i.imgur.com/bPhDkaW.png)
+![](https://i.imgur.com/j2PCIrB.png)
 
 ### Requirements
 * Python 3  
