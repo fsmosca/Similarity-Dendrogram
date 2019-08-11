@@ -14,3 +14,9 @@ Plot dendrogram on chess engines similarity. The script will read matrix.txt a s
 * Execute similaritydendrogram.py  
 The output will be similarity_dendrogram.png
 
+### Credits
+* Similarity Tester version 03  
+https://komodochess.com/downloads.htm
+* SIMEX  
+http://rebel13.nl/misc/simex.html
+
