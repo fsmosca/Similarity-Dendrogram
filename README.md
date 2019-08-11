@@ -4,6 +4,7 @@ Plot dendrogram on chess engines similarity. The script will read matrix.txt a s
 ![](https://i.imgur.com/bPhDkaW.png)
 
 ### Requirements
+* Python 3  
 * scipy  
 * matplotlib  
 * numpy  
