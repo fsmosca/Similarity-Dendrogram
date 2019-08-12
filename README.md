@@ -9,7 +9,6 @@ Movetime: 100 millisec or 0.1 sec
 * Python 3  
 * scipy  
 * matplotlib  
-* numpy  
 
 ### How to run
 * Place similaritydendrogram.py and matrix.txt in same folder
