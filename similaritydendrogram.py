@@ -7,7 +7,6 @@ Requirements:
     python 3
     scipy
     matplotlib
-    numpy 
 """
 
 import logging
@@ -201,10 +200,11 @@ class Similarity():
         """
         Plot dendrogram based from matrix file. 
         """
+        logging.info('Plotting dendrogram')
         ti = self.get_test_info()
         if ti is not None:
             epdfn = ti[0].split('\\')[1]
-            test_info = 'epd: {}, pos: {}, t(ms):{}'.format(epdfn, ti[1], ti[2])
+            test_info = 'epd: {}, pos: {}, t(ms): {}'.format(epdfn, ti[1], ti[2])
         else:
             test_info = 'epd: "", pos: "", t(ms): ""'
         
