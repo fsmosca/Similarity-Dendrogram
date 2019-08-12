@@ -4,23 +4,33 @@ similaritydendrogram.py
 Read sim matrix output and plot its equivalent dendrogram.
 
 Requirements:
-    python
+    python 3
     scipy
     matplotlib
     numpy 
 """
 
+import logging
+import argparse
 from scipy.cluster.hierarchy import dendrogram, linkage  
 import matplotlib.pyplot as plt
-import numpy as np
+
+
+APP_NAME = 'Similarity Dendrogram'
+APP_DESC = 'Read engine similarity matrix and output dendrogram.'
+APP_VERSION = '0.1'
+APP_NAME_VERSION = APP_NAME + ' v' + APP_VERSION
 
 
 class Similarity():
-    def __init__(self, matrix_fn):
+    def __init__(self, matrix_fn, is_simex=True):
         self.matrix_fn = matrix_fn
+        self.is_simex = is_simex
         
     def get_players(self):
-        """ Returns player name list """  
+        """
+        Read matrix file and return player name list
+        """
         players = []
         read_line = False
         
@@ -41,36 +51,101 @@ class Similarity():
                     
         return players
     
-    def get_max_similarity(self):
+    def get_max_sim_value(self):
         """
-        Read matrix_fn file and returns the max sim value
+        Read matrix file and returns the max sim value
         """
         sim_max = -1.0
-        read_line = False
         
-        with open(self.matrix_fn) as f:
-            for lines in f:
-                line = lines.strip()
-                if line.startswith('1.'):
-                    read_line = True
-                
-                if read_line: 
-                    if line == '':
+        if self.is_simex:
+            num_line = 0
+            with open(self.matrix_fn) as f:
+                for lines in f:
+                    num_line += 1
+                    
+                    # Skip first line of csv header
+                    if num_line == 1:
                         continue
-                    sp = line.split()
+                    
+                    line = lines.strip()
+                    sp = line.split(',')
+                    
+                    # Delete the first entry, this is only an engine name.
+                    del sp[0]
                     for n in sp:
                         if '-' in n:
                             continue
                         if float(n) > sim_max:
                             sim_max = float(n)
-                            
+        else:
+            read_line = False
+            
+            with open(self.matrix_fn) as f:
+                for lines in f:
+                    line = lines.strip()
+                    if line.startswith('1.'):
+                        read_line = True
+                    
+                    if read_line: 
+                        if line == '':
+                            continue
+                        sp = line.split()
+                        for n in sp:
+                            if '-' in n:
+                                continue
+                            if float(n) > sim_max:
+                                sim_max = float(n)
+                                
+        logging.info('sim_max: {}'.format(sim_max))
+
         return sim_max
     
-    def get_similarity(self):
+    def get_simex_matrix(self):
         """
-        Read matrix_fn file and returns similarity matrix
+        Read matrix in csv and return matrix and players in a list.
         """
-        sim_max = min(100.0, self.get_max_similarity() + 1.0)
+        sim_max = min(100.0, self.get_max_sim_value() + 1.0)
+        players = []
+        sim = []
+        data = []
+        num_line = 0
+        
+        with open(self.matrix_fn) as f:
+            for lines in f:
+                num_line += 1
+                
+                # Skip the header [epd],num_pos,ms
+                if num_line == 1:
+                    continue
+                
+                a = []
+                line = lines.strip()
+                sp = line.split(',')
+                players.append(sp[0].strip())
+                
+                # Skip first element of n as this is the engine name
+                for i, n in enumerate(sp):
+                    if i == 0:
+                        continue
+                    if '-' in n:
+                        a.append(str(sim_max))  
+                    else:
+                        a.append(n)
+                data.append(a)
+                
+        for d in data:
+            # Delete first element this is only the name of engine.
+            del d[0]
+            b = [int(float(i)) for i in d]
+            sim.append(b)
+            
+        return sim, players
+    
+    def get_sim_matrix(self):
+        """
+        Read matrix file and returns matrix in a list.
+        """
+        sim_max = min(100.0, self.get_max_sim_value() + 1.0)
         sim = []
         data = []
         read_line = False
@@ -106,18 +181,19 @@ class Similarity():
                        plot_xlim=None, image_fn='dendrogram.png',
                        image_dpi=600):
         """
-        Plot dendrogram based from matrix_fn 
+        Plot dendrogram based from matrix file. 
         """
-        players = self.get_players()    
-        similarity = self.get_similarity()
-            
-        np_data = np.array(similarity)
+        if not self.is_simex:
+            players = self.get_players()
+            sim_matrix = self.get_sim_matrix()
+        else:
+            sim_matrix, players = self.get_simex_matrix()
             
         # Methods [single, complete, average, weighted, ...] and others see
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html
-        linked = linkage(np_data, method=dist_method)
+        linked = linkage(sim_matrix, method=dist_method)
         
-        nr = range(1, len(similarity)+1)
+        nr = range(1, len(sim_matrix)+1)
         
         label = ['[' + str(n) + '] ' + p for n, p in zip(nr, players)]
         
@@ -140,11 +216,31 @@ class Similarity():
         plt.show()
 
 
-def main():  
-    matrix_fn = 'matrix.txt'
-    s = Similarity(matrix_fn)
-    s.get_dendrogram(dist_method='ward', fig_xlim=10, fig_ylim=8,
-                     plot_xlim=None, image_fn='similarity_dendrogram.png',
+def main():
+    parser = argparse.ArgumentParser(description=APP_DESC, epilog=APP_NAME_VERSION)
+    parser.add_argument('--input', help='input similarity matrix file',
+                        required=True)
+    parser.add_argument('--output', help='output dendrogram image file, ' +
+                        'default=similarity_dendrogram.png',
+                        default='similarity_dendrogram.png',
+                        required=False)
+    parser.add_argument('--sim', help='The input similarity matrix is ' +
+                        'from sim, otherwise it is from simex.',
+                        action='store_true')
+    parser.add_argument('--log', help='Records program logging', action='store_true')
+    
+    args = parser.parse_args()
+    inputf = args.input
+    outputf = args.output
+        
+    if args.log:
+        logging.basicConfig(filename='simtodendro_log.txt',
+                filemode='w', level=logging.DEBUG,
+                format='%(asctime)s :: %(levelname)s :: %(message)s')
+        
+    s = Similarity(inputf, not args.sim)
+    s.get_dendrogram(dist_method='ward', fig_xlim=10, fig_ylim=9,
+                     plot_xlim=None, image_fn=outputf,
                      image_dpi=300)
 
 
