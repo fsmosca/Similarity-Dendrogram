@@ -11,9 +11,11 @@ Movetime: 100 millisec or 0.1 sec
 * matplotlib  
 
 ### How to run
-* Place similaritydendrogram.py and matrix.txt in same folder
-* Execute similaritydendrogram.py  
-The output will be similarity_dendrogram.png
+* Command line
+1. If using an output from simex  
+`python similaritydendrogram.py --input dendrogram.csv --output simex.png`  
+2. If using an output from sim  
+`python similaritydendrogram.py --input matrix.txt --output sim.png --sim`
 
 ### Credits
 * Similarity Tester version 03  
