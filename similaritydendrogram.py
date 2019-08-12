@@ -18,7 +18,7 @@ import matplotlib.pyplot as plt
 
 APP_NAME = 'Similarity Dendrogram'
 APP_DESC = 'Read engine similarity matrix and output dendrogram.'
-APP_VERSION = '0.1'
+APP_VERSION = '0.2'
 APP_NAME_VERSION = APP_NAME + ' v' + APP_VERSION
 
 
@@ -26,6 +26,24 @@ class Similarity():
     def __init__(self, matrix_fn, is_simex=True):
         self.matrix_fn = matrix_fn
         self.is_simex = is_simex
+        
+    def get_test_info(self):
+        """
+        Read 1st line of input similarity from simex matrix output and return
+        the epd test, num_pos of epd and the time in ms
+        """
+        ret_line = None
+        
+        if not self.is_simex:
+            return ret_line
+        
+        with open(self.matrix_fn) as f:
+            for lines in f:
+                line = lines.strip()
+                ret_line = line
+                break
+            
+        return ret_line.split(',')
         
     def get_players(self):
         """
@@ -183,6 +201,13 @@ class Similarity():
         """
         Plot dendrogram based from matrix file. 
         """
+        ti = self.get_test_info()
+        if ti is not None:
+            epdfn = ti[0].split('\\')[1]
+            test_info = 'epd: {}, pos: {}, t(ms):{}'.format(epdfn, ti[1], ti[2])
+        else:
+            test_info = 'epd: "", pos: "", t(ms): ""'
+        
         if not self.is_simex:
             players = self.get_players()
             sim_matrix = self.get_sim_matrix()
@@ -204,8 +229,8 @@ class Similarity():
                     distance_sort='descending',
                     leaf_rotation=0.,
                     show_leaf_counts=True)
-        plt.title('Hierarchical Clustering Dendrogram\nmethod={}'.
-                  format(dist_method), size=14)
+        plt.title('Hierarchical Clustering Dendrogram, method={}\n{}'.
+                  format(dist_method, test_info), size=14)
         plt.xlabel('Distance (lower more similar)', size=10)
         plt.xticks(fontsize=10, rotation=0)
         plt.yticks(fontsize=10)
