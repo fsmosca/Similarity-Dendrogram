@@ -7,12 +7,14 @@ Requirements:
     python 3
     scipy
     matplotlib
+    numpy
 """
 
 import logging
 import argparse
 from scipy.cluster.hierarchy import dendrogram, linkage  
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 APP_NAME = 'Similarity Dendrogram'
@@ -214,11 +216,13 @@ class Similarity():
         else:
             sim_matrix, players = self.get_simex_matrix()
             
+        Z = np.array(sim_matrix)
+            
         # Methods [single, complete, average, weighted, ...] and others see
         # https://docs.scipy.org/doc/scipy/reference/generated/scipy.cluster.hierarchy.linkage.html
-        linked = linkage(sim_matrix, method=dist_method)
+        linked = linkage(Z, method=dist_method)
         
-        nr = range(1, len(sim_matrix)+1)
+        nr = range(1, len(Z)+1)
         
         label = ['[' + str(n) + '] ' + p for n, p in zip(nr, players)]
         
