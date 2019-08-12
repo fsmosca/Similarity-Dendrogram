@@ -1,9 +1,7 @@
 # Similarity-Dendrogram
 Plot dendrogram on chess engines similarity. The script will read matrix.txt a similarity output from sim or simex program.
 
-Test epd: midgame.epd  
-Movetime: 100 millisec or 0.1 sec
-![](https://i.imgur.com/j2PCIrB.png)
+![](https://i.imgur.com/QyqUmWP.png)
 
 ### Requirements
 * Python 3  
