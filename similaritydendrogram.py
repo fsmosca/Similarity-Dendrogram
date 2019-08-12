@@ -19,7 +19,7 @@ import numpy as np
 
 APP_NAME = 'Similarity Dendrogram'
 APP_DESC = 'Read engine similarity matrix and output dendrogram.'
-APP_VERSION = '0.2'
+APP_VERSION = '0.3'
 APP_NAME_VERSION = APP_NAME + ' v' + APP_VERSION
 
 
@@ -113,9 +113,9 @@ class Similarity():
             
         return sim, players
     
-    def get_dendrogram(self, dist_method='ward', fig_xlim=5, fig_ylim=9,
+    def get_dendrogram(self, dist_method='ward', fig_xlim=10, fig_ylim=9,
                        plot_xlim=None, image_fn='dendrogram.png',
-                       image_dpi=600):
+                       image_dpi=300):
         """
         Plot dendrogram based from matrix file. 
         """
@@ -163,21 +163,30 @@ def main():
                         'default=similarity_dendrogram.png',
                         default='similarity_dendrogram.png',
                         required=False)
+    parser.add_argument('--method', help='input distance method ' + 
+                        '[ward, complete, single, average, weighted, centroid, median], default=ward',
+                        default='ward', required=False)
+    parser.add_argument('--figx', help='input figure x value length, default=10',
+                        default=10, type=int, required=False)
+    parser.add_argument('--figy', help='input figure y value length, default=9',
+                        default=9, type=int, required=False)
+    parser.add_argument('--plotx', help='input plot x value length, default=None',
+                        default=None, type=int, required=False)
+    parser.add_argument('--dpi', help='input image dpi, default=300',
+                        default=300, type=int, required=False)
     parser.add_argument('--log', help='Records program logging', action='store_true')
     
     args = parser.parse_args()
-    inputf = args.input
-    outputf = args.output
         
     if args.log:
         logging.basicConfig(filename='simtodendro_log.txt',
                 filemode='w', level=logging.DEBUG,
                 format='%(asctime)s :: %(levelname)s :: %(message)s')
         
-    s = Similarity(inputf)
-    s.get_dendrogram(dist_method='ward', fig_xlim=10, fig_ylim=9,
-                     plot_xlim=None, image_fn=outputf,
-                     image_dpi=300)
+    s = Similarity(args.input)
+    s.get_dendrogram(dist_method=args.method, fig_xlim=args.figx, fig_ylim=args.figy,
+                     plot_xlim=args.plotx, image_fn=args.output,
+                     image_dpi=args.dpi)
 
 
 if __name__ == '__main__':
