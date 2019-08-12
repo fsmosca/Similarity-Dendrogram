@@ -8,6 +8,7 @@ See dendrogram.csv for similarity matrix values.
 * Python 3  
 * scipy  
 * matplotlib  
+* numpy
 
 ### How to run
 * Command line
