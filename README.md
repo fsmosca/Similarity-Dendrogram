@@ -11,11 +11,8 @@ See dendrogram.csv for similarity matrix values.
 * numpy
 
 ### How to run
-* Command line
-1. If using an output from simex  
-`python similaritydendrogram.py --input dendrogram.csv --output simex.png`  
-2. If using an output from sim  
-`python similaritydendrogram.py --input matrix.txt --output sim.png --sim`
+* Command line  
+`python similaritydendrogram.py --input dendrogram.csv --output simex.png`
 
 ### Credits
 * Similarity Tester version 03  
