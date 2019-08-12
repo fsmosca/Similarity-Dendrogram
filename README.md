@@ -12,7 +12,13 @@ See dendrogram.csv for similarity matrix values.
 
 ### How to run
 * Command line  
-`python similaritydendrogram.py --input dendrogram.csv --output simex.png`
+`python similaritydendrogram.py --input dendrogram.csv --output simex.png`  
+
+* If there are so many engines, you may increase the image vertical length by (default=9):  
+`python similaritydendrogram.py --input dendrogram.csv --output simex.png --figy 16`  
+
+* To modify method of calculating distance between newly formed clusters (default=ward):    
+`python similaritydendrogram.py --input dendrogram.csv --output simex.png --method complete`  
 
 * Help  
 ```
