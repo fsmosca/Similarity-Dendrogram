@@ -1,5 +1,5 @@
 # Similarity-Dendrogram
-Plot dendrogram on chess engines similarity. The script will read matrix.txt a similarity output from sim or simex program.
+Plot dendrogram on chess engines similarity. The script will read a csv similarity output from simex program.
 
 See dendrogram.csv for similarity matrix values.
 ![](https://i.imgur.com/nF1rowi.png)
