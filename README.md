@@ -5,14 +5,18 @@ See dendrogram.csv for similarity matrix values.
 ![](https://i.imgur.com/nF1rowi.png)
 
 ### Requirements
+##### 1. If you want to run the python source
 * Python 3  
 * scipy  
 * matplotlib  
 * numpy
+##### 2. If you want to run the exe file, just download the similaritydendrogram.zip file in the release page at https://github.com/fsmosca/Similarity-Dendrogram/releases
+* Nothing
 
 ### How to run
 * Command line  
 `python similaritydendrogram.py --input dendrogram.csv --output simex.png`  
+`similaritydendrogram.exe --input dendrogram.csv --output simex.png`  
 
 * If there are so many engines, you may increase the image vertical length by (default=9):  
 `python similaritydendrogram.py --input dendrogram.csv --output simex.png --figy 16`  
